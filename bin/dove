@@ -1,0 +1,132 @@
+#!/bin/bash
+
+function set_dove_os () {
+    os_type=$1
+    echo $os_type > ~/.dove_os
+}
+function get_dove_os () {
+    if [ -f ~/.dove_os ]; then
+        cat ~/.dove_os
+    fi
+}
+
+DOVE_PATH=$0
+DOVE_DIR=`dirname $DOVE_PATH`
+DOVE_OS=`get_dove_os`
+DA_NAME="--name apps"
+DA_LINK="--link redis:redis --link postgres:postgres --link mysql:mysql"
+DA_PORT="-p 3000:3000 -p 3001:3001 -p 4000:4000 -p 4001:4001 -p 8080:8080 -p 9000:9000 -p 49155:22"
+DA_VOLUME="-v $(pwd)/:~/"
+if [ $DOVE_OS ]; then
+    case "$DOVE_OS" in
+        centos)
+            DA_IMAGE=quay.io/nabinno/dove-centos-apps
+            ;;
+        ubuntu)
+            DA_IMAGE=quay.io/nabinno/dove-ubuntu-apps
+            ;;
+    esac
+fi
+alias dockerc="docker run -t --rm $DA_VOLUME $DA_LINK $DA_IMAGE bash -c"
+alias dockerd="docker run -t -d $DA_NAME $DA_PORT $DA_VOLUME $DA_LINK -P $DA_IMAGE /usr/sbin/sshd -D"
+
+if [ $# -lt 1 ]; then
+    echo "Usage : dove [options] <command> [<args>]"
+    echo ""
+    echo "Commands:"
+    echo "    up      [os name]  : Vagrant up container with current directory"
+    echo "                         OS name is centos or ubuntu"
+    echo "    rc      [app name] : Rails Console"
+    echo "    rdbm    [app name] : Migrate Database"
+    echo "    restore [app name] [db type] [db name]"
+    echo "                       : Restore db from db/current.sql. DB type is"
+    echo "                         postgres or mysql"
+    echo "    restart            : Restarting Docker App Container"
+    echo "    cmd     [app name] [bundle command]"
+    echo "                       : Run the command in quotes in app"
+    echo ""
+    echo "Current OS: $DOVE_OS"
+    exit
+fi
+
+case "$1" in
+    up)
+        os_type=$2
+        if [ ! $# -eq 2 ]; then
+            echo "command: dove up [os name (centos|ubuntu)] - Vagrant up container with current directory"
+            exit
+        fi
+        echo "Vagrant up '$os_type' Container.."
+        cd $DOVE_DIR/../$os_type
+        vagrant up; wait
+        vagrant ssh-config $os_type >> ~/.ssh/config
+        cd $CURRENT_PATH
+        set_dove_os $os_type
+        ;;
+    rc)
+        app_name=$2
+        if [ ! $DA_IMAGE ]; then exit; fi
+        if [ ! $app_name ]; then
+            echo "command: dove rc [app name] - rails console"
+            exit
+        fi
+        echo "Starting Console in Docker Container.."
+        vagrant ssh -c "dockerc 'cd ~/$app_name && bundle exec rails c'"
+        ;;
+    rdbm)
+        app_name=$2
+        if [ ! $DA_IMAGE ]; then exit; fi
+        if [ ! $# -eq 2 ]; then
+            echo "Command: rdbm [app name] - Run rake db:migrate in Docker container"
+            exit
+        fi
+        echo "Running rake db:migrate in Docker container.."
+        vagrant ssh -c "dockerc 'cd ~/$app_name && bundle exec rake db:migrate'"
+        ;;
+    restore)
+        app_name=$2
+        db_type=$3
+        db_name=$4
+        script=<<SCRIPT
+cd ~/$app_name
+bundle exec rake db:drop db:create db:migrate
+case "$db_type" in
+    postgres)
+        psql -U root -d $db_name -f ~/$app_name/db/current.sql
+        ;;
+    mysql)
+        mysql -uroot $db_name < ~/$app_name/db/current.sql
+        ;;
+esac
+SCRIPT
+        if [ ! $DA_IMAGE ]; then exit; fi
+        if [ ! $# -eq 4 ]; then
+            echo "Command: restore [app name] [db type (postgres|mysql)] [db name] - Restore db from [app name]/db/current.sql"
+            exit
+        fi
+        echo "Restoring db from $app_name/db/current.sql"
+        vagrant ssh -c "docker stop apps && dockerc $script && docker start apps"
+        ;;
+    restart)
+        if [ ! $DA_IMAGE ]; then exit; fi
+        echo "Restarting Docker App Container"
+        if $dove_apps_image; then exit; fi
+        vagrant ssh -c "docker stop apps && docker rm apps && dockerd"
+        ;;
+    cmd)
+        app_name=$2
+        command=$3
+        if [ ! $DA_IMAGE ]; then exit; fi
+        if [ ! $# -eq 3 ]; then
+            echo "Command: cmd [app name] [bundle command] - Run command in docker container"
+            exit
+        fi
+        echo "running '$command' in docker container"
+        vagrant ssh -c "dockerc 'cd ~/$app_name && eval $command'"
+        ;;
+    *)
+        echo "Vagrant command"
+        echo ""
+        vagrant $*
+        ;;
+esac
