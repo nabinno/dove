@@ -1,12 +1,12 @@
 #!/bin/bash
 
 function set_dove_os () {
-    os_type=$1
-    echo $os_type > ~/.dove_os
+    os_name=$1
+    echo $os_name > $DOVE_DIR/.dove/os_name
 }
 function get_dove_os () {
-    if [ -f ~/.dove_os ]; then
-        cat ~/.dove_os
+    if [ -f $DOVE_DIR/.dove/os_name ]; then
+        cat $DOVE_DIR/.dove/os_name
     fi
 }
 
@@ -51,17 +51,17 @@ fi
 
 case "$1" in
     up)
-        os_type=$2
+        os_name=$2
         if [ ! $# -eq 2 ]; then
             echo "command: dove up [os name (centos|ubuntu)] - Vagrant up container with current directory"
             exit
         fi
-        echo "Vagrant up '$os_type' Container.."
-        cd $DOVE_DIR/../$os_type
+        echo "Vagrant up '$os_name' Container.."
+        cd $DOVE_DIR/../$os_name
         vagrant up; wait
-        vagrant ssh-config $os_type >> ~/.ssh/config
+        vagrant ssh-config $os_name >> ~/.ssh/config
         cd $CURRENT_PATH
-        set_dove_os $os_type
+        set_dove_os $os_name
         ;;
     rc)
         app_name=$2

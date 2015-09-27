@@ -21,6 +21,7 @@ test/version_tmp
 *.swp
 .vagrant
 .old
+.dove
 
 # OSX
 .DS_Store
