@@ -106,9 +106,9 @@ RUN git clone git://github.com/sstephenson/rbenv.git .local/rbenv && \
     git clone https://github.com/sstephenson/rbenv-gem-rehash.git .local/rbenv/plugins/rbenv-gem-rehash && \
     echo 'eval "$(rbenv init -)' && \
     exec $SHELL -l
-RUN rbenv install $REQUIRED_RUBY_VERSION && \
-    rbenv rehash && \
-    rbenv global $REQUIRED_RUBY_VERSION
+RUN .local/bin/rbenv install $REQUIRED_RUBY_VERSION && \
+    .local/bin/rbenv rehash && \
+    .local/bin/rbenv global $REQUIRED_RUBY_VERSION
 RUN gem install --no-rdoc --no-ri \
     bundler \
     compass \
