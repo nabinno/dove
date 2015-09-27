@@ -97,8 +97,6 @@ RUN useradd action && \
 RUN chmod 640 /etc/sudoers && \
     sed -i "s/^\(# User privilege specification\)$/\1\naction  ALL=(ALL)       ALL/g" /etc/sudoers && \
     chmod 440 /etc/sudoers
-RUN chmod 775 /var/run/screen && \
-    chmod 777 -R /var/spool/cron
 
 # Ruby
 WORKDIR /home/action
