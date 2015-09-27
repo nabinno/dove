@@ -13,6 +13,7 @@ ENV REQUIRED_PLAY_VERSION 2.2.3
 ENV REQUIRED_PERL_VERSION 5.18.2
 ENV REQUIRED_RUBY_VERSION 2.2.0
 ENV REQUIRED_EMACS_VERSION 24.5
+ENV RBENV_ROOT home/action/.local/rbenv
 ENV RAILS_ENV development
 ENV JAVA_HOME /usr/lib/jvm/java-$REQUIRED_JAVA_VERSION
 ENV PLAY_HOME /usr/local/play-$REQUIRED_PLAY_VERSION
@@ -70,6 +71,7 @@ RUN yum install -y \
     postgresql-server \
     python-pip \
     readline \
+    ruby \
     screen \
     sudo \
     supervisor \
@@ -100,15 +102,14 @@ RUN chmod 640 /etc/sudoers && \
 
 # Ruby
 WORKDIR /home/action
-RUN git clone git://github.com/sstephenson/rbenv.git .local/rbenv && \
+RUN git clone git://github.com/sstephenson/rbenv.git ~/.local/rbenv && \
     mkdir .local/rbenv/shims .local/rbenv/versions .local/rbenv/plugins && \
-    git clone git://github.com/sstephenson/ruby-build.git .local/rbenv/plugins/ruby-build && \
-    git clone https://github.com/sstephenson/rbenv-gem-rehash.git .local/rbenv/plugins/rbenv-gem-rehash && \
+    git clone git://github.com/sstephenson/ruby-build.git ~/.local/rbenv/plugins/ruby-build && \
+    git clone https://github.com/sstephenson/rbenv-gem-rehash.git ~/.local/rbenv/plugins/rbenv-gem-rehash && \
     echo 'eval "$(rbenv init -)' && \
-    exec $SHELL -l
-RUN .local/rbenv/bin/rbenv install $REQUIRED_RUBY_VERSION && \
-    .local/rbenv/bin/rbenv rehash && \
-    .local/rbenv/bin/rbenv global $REQUIRED_RUBY_VERSION
+RUN rbenv install $REQUIRED_RUBY_VERSION && \
+    rbenv rehash && \
+    rbenv global $REQUIRED_RUBY_VERSION
 RUN gem install --no-rdoc --no-ri \
     bundler \
     compass \
