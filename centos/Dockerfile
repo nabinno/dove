@@ -28,7 +28,6 @@ RUN cp -p /usr/share/zoneinfo/Japan /etc/localtime
 RUN rpm -Uvh http://ftp.riken.jp/Linux/fedora/epel/6/x86_64/epel-release-6-8.noarch.rpm
 RUN rpm -Uvh http://rpms.famillecollet.com/enterprise/remi-release-6.rpm
 RUN yum -y update; yum clean all
-RUN yum groupinstall 'Development Tools'
 RUN yum install -y --enablerepo=remi \
     mysql \
     mysql-devel \
