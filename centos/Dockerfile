@@ -1,11 +1,11 @@
 FROM centos:centos7
-ENV PATH $HOME/.linuxbrew/bin:$PATH
-ENV PATH $HOME/.jenv/bin:$PATH
-ENV PATH $HOME/.local/bin:$PATH
-ENV PATH $HOME/.local/rbenv/bin:$PATH
-ENV PATH $HOME/.local/perl-$REQUIRED_PERL_VERSION/bin:$PATH
-ENV PATH $HOME/.local/scala-$REQUIRED_SCALA_VERSION/bin:$PATH
-ENV PATH $HOME/.cask/bin:$PATH
+ENV PATH /home/action/.linuxbrew/bin:$PATH
+ENV PATH /home/action/.jenv/bin:$PATH
+ENV PATH /home/action/.local/bin:$PATH
+ENV PATH /home/action/.local/rbenv/bin:$PATH
+ENV PATH /home/action/.local/perl-$REQUIRED_PERL_VERSION/bin:$PATH
+ENV PATH /home/action/.local/scala-$REQUIRED_SCALA_VERSION/bin:$PATH
+ENV PATH /home/action/.cask/bin:$PATH
 ENV PATH $PLAY_HOME:$PATH
 ENV REQUIRED_JAVA_VERSION 1.7.0
 ENV REQUIRED_SCALA_VERSION 2.11.5
@@ -16,9 +16,9 @@ ENV REQUIRED_EMACS_VERSION 24.5
 ENV RAILS_ENV development
 ENV JAVA_HOME /usr/lib/jvm/java-$REQUIRED_JAVA_VERSION
 ENV PLAY_HOME /usr/local/play-$REQUIRED_PLAY_VERSION
-ENV MANPATH $HOME/.linuxbrew/share/man:$MANPATH
-ENV INFOPATH $HOME/.linuxbrew/share/info:$INFOPATH
-ENV LD_LIBRARY_PATH $HOME/.linuxbrew/lib:$LD_LIBRARY_PATH
+ENV MANPATH /home/action/.linuxbrew/share/man:$MANPATH
+ENV INFOPATH /home/action/.linuxbrew/share/info:$INFOPATH
+ENV LD_LIBRARY_PATH /home/action/.linuxbrew/lib:$LD_LIBRARY_PATH
 
 # Timezone
 RUN rm -f /etc/localtime
