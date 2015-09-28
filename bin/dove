@@ -2,11 +2,11 @@
 
 function set_dove_os () {
     os_name=$1
-    echo $os_name > $DOVE_DIR/.dove/os_name
+    echo $os_name > $DOVE_DIR/../.dove/os_name
 }
 function get_dove_os () {
-    if [ -f $DOVE_DIR/.dove/os_name ]; then
-        cat $DOVE_DIR/.dove/os_name
+    if [ -f $DOVE_DIR/../.dove/os_name ]; then
+        cat $DOVE_DIR/../.dove/os_name
     fi
 }
 
