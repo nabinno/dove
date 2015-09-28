@@ -108,12 +108,7 @@ RUN git clone git://github.com/sstephenson/rbenv.git .local/rbenv && \
     git clone https://github.com/sstephenson/rbenv-gem-rehash.git .local/rbenv/plugins/rbenv-gem-rehash
 RUN gem install --no-rdoc --no-ri \
     bundler \
-    compass \
-    haml \
-    rails \
-    rubygems-bundler \
-    sidekiq \
-    unicorn
+    rubygems-bundler
 RUN gem regenerate_binstubs
 
 # Linuxbrew
