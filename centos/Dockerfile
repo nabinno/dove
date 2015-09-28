@@ -102,10 +102,14 @@ RUN chmod 640 /etc/sudoers && \
 
 # Ruby
 WORKDIR /home/action
-RUN git clone git://github.com/sstephenson/rbenv.git ~/.local/rbenv && \
+RUN git clone git://github.com/sstephenson/rbenv.git .local/rbenv && \
     mkdir .local/rbenv/shims .local/rbenv/versions .local/rbenv/plugins && \
-    git clone git://github.com/sstephenson/ruby-build.git ~/.local/rbenv/plugins/ruby-build && \
-    git clone https://github.com/sstephenson/rbenv-gem-rehash.git ~/.local/rbenv/plugins/rbenv-gem-rehash
+    git clone git://github.com/sstephenson/ruby-build.git .local/rbenv/plugins/ruby-build && \
+    git clone https://github.com/sstephenson/rbenv-gem-rehash.git .local/rbenv/plugins/rbenv-gem-rehash && \
+    echo 'eval "$(rbenv init -)' && \
+    rbenv install $REQUIRED_RUBY_VERSION && \
+    rbenv rehash && \
+    rbenv global $REQUIRED_RUBY_VERSION
 RUN gem install --no-rdoc --no-ri \
     bundler \
     compass \
