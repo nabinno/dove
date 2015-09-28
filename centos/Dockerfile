@@ -127,8 +127,7 @@ RUN curl https://bintray.com/sbt/rpm/rpm | tee /etc/yum.repos.d/bintray-sbt-rpm.
 
 # Perl
 WORKDIR /home/action
-RUN git clone https://github.com/tagomoris/xbuild.git .local/xbuild && \
-    .local/xbuild/perl-install $REQUIRED_PERL_VERSION .local/perl-$REQUIRED_PERL_VERSION && \
+RUN git clone https://github.com/tagomoris/xbuild.git .local/xbuild
 
 # NodeJS
 WORKDIR /home/action
