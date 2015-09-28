@@ -113,22 +113,22 @@ RUN gem regenerate_binstubs
 
 # Java
 WORKDIR /home/action
-RUN git clone https://github.com/gcuisinier/jenv.git ~/.jenv && \
+RUN git clone https://github.com/gcuisinier/jenv.git .jenv && \
     eval "$(jenv init -)"
 RUN wget http://www.scala-lang.org/files/archive/scala-$REQUIRED_SCALA_VERSION.tgz && \
     tar xvf scala-$REQUIRED_SCALA_VERSION.tgz && \
-    mv scala-$REQUIRED_SCALA_VERSION ~/.local/
+    mv scala-$REQUIRED_SCALA_VERSION .local/
 RUN wget http://downloads.typesafe.com/play/$REQUIRED_PLAY_VERSION/play-$REQUIRED_PLAY_VERSION.zip && \
     unzip play-$REQUIRED_PLAY_VERSION.zip && \
-    mv play-$REQUIRED_PLAY_VERSION ~/.local/ && \
+    mv play-$REQUIRED_PLAY_VERSION .local/ && \
     rm -fr play-$REQUIRED_PLAY_VERSION.zip
 RUN curl https://bintray.com/sbt/rpm/rpm | tee /etc/yum.repos.d/bintray-sbt-rpm.repo && \
     yum install -y sbt
 
 # Perl
 WORKDIR /home/action
-RUN git clone https://github.com/tagomoris/xbuild.git ~/.local/xbuild && \
-    ~/.local/xbuild/perl-install $REQUIRED_PERL_VERSION ~/.local/perl-$REQUIRED_PERL_VERSION && \
+RUN git clone https://github.com/tagomoris/xbuild.git .local/xbuild && \
+    .local/xbuild/perl-install $REQUIRED_PERL_VERSION .local/perl-$REQUIRED_PERL_VERSION && \
 
 # NodeJS
 WORKDIR /home/action
