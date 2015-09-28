@@ -111,27 +111,6 @@ RUN gem install --no-rdoc --no-ri \
     rubygems-bundler
 RUN gem regenerate_binstubs
 
-# Linuxbrew
-RUN ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/linuxbrew/go/install)"
-RUN brew install \
-    chruby \
-    ctags \
-    elixir \
-    elixir-build \
-    erlang \
-    go \
-    heroku_toolbelt \
-    jq \
-    lua \
-    maven \
-    mruby \
-    rust \
-    scalaenv \
-    the_silver_searcher \
-    tmux \
-    tree \
-    vert.x
-
 # Java
 WORKDIR /home/action
 RUN git clone https://github.com/gcuisinier/jenv.git ~/.jenv && \
