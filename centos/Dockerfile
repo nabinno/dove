@@ -129,24 +129,6 @@ RUN curl https://bintray.com/sbt/rpm/rpm | tee /etc/yum.repos.d/bintray-sbt-rpm.
 WORKDIR /home/action
 RUN git clone https://github.com/tagomoris/xbuild.git .local/xbuild
 
-# NodeJS
-WORKDIR /home/action
-RUN npm install -g \
-    bower \
-    coffee-script \
-    grunt-cli \
-    gulp \
-    http-server \
-    less \
-    node-plantuml \
-    phantomjs2 \
-    requirejs
-
-# Python
-WORKDIR /home/action
-RUN pip install -U \
-    awscli
-
 # Emacs
 WORKDIR /home/action
 RUN current_pwd=`pwd` && \
