@@ -14,7 +14,7 @@ docker run -d --name redis quay.io/nabinno/dove-centos7-redis
 docker run -d --name memcached quay.io/nabinno/dove-centos7-memcached
 docker run -d --name rabbitmq quay.io/nabinno/dove-centos7-rabbitmq
 docker run -d --name nginx -p 80:80 quay.io/nabinno/dove-centos7-nginx
-docker run -d --name apps -p 3000:3000 -p 3001:3001 -p 4000:4000 -p 4001:4001 -p 8080:8080 -p 9000:9000 -p 49155:22 -v $(pwd):/home/centos --link redis:redis --link memcached:memcached --link nginx:nginx --link rabitmq:rabitmq --link postgres:postgres --link mariadb:mariadb --link mongodb:mongodb -P quay.io/nabinno/dove-centos7-apps
+docker run -d --name apps -p 3000:3000 -p 3001:3001 -p 4000:4000 -p 4001:4001 -p 8080:8080 -p 9000:9000 -p 49159:22 -v $(pwd):/home/centos --link redis:redis --link memcached:memcached --link nginx:nginx --link rabbitmq:rabbitmq --link postgres:postgres --link mariadb:mariadb --link mongodb:mongodb -P quay.io/nabinno/dove-centos7-apps
 SCRIPT
 
 # Commands required to ensure correct docker containers
@@ -44,7 +44,7 @@ Vagrant.configure("2") do |config|
   config.vm.network "private_network", ip: "192.168.33.10"
 
   # Rails Server Port Forwarding
-  config.vm.network "forwarded_port", guest: 22, host: 49155, id: "ssh"
+  config.vm.network "forwarded_port", guest: 22, host: 49159, id: "ssh"
   config.vm.network "forwarded_port", guest: 80, host: 80, id: "http"
   config.vm.network "forwarded_port", guest: 3000, host: 3000
   config.vm.network "forwarded_port", guest: 3001, host: 3001
@@ -53,8 +53,7 @@ Vagrant.configure("2") do |config|
   config.vm.network "forwarded_port", guest: 8080, host: 8080
   config.vm.network "forwarded_port", guest: 9000, host: 9000
 
-  config.vm.box = "centos7"
-  config.vm.box_url = "https://oss-binaries.phusionpassenger.com/vagrant/boxes/latest/ubuntu-14.04-amd64-vbox.box"
+  config.vm.box = "bento/centos-7.1"
 
   # Install latest docker
   config.vm.provision "docker"

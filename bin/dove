@@ -6,16 +6,17 @@ function set_dove_os () {
 }
 function get_dove_os () {
     if [ -f $DOVE_DIR/../.dove/os_name ]; then
+        mkdir -p $DOVE_DIR/../.dove/
         cat $DOVE_DIR/../.dove/os_name
     fi
 }
 
 DOVE_PATH=$0
 DOVE_DIR=`dirname $DOVE_PATH`
-DOVE_OS=`get_dove_os`
+if [ -f $DOVE_DIR/../.dove/os_name ]; then DOVE_OS=`get_dove_os`; fi
 DA_NAME="--name apps"
 DA_LINK="--link redis:redis --link postgres:postgres --link mysql:mysql"
-DA_PORT="-p 3000:3000 -p 3001:3001 -p 4000:4000 -p 4001:4001 -p 8080:8080 -p 9000:9000 -p 49155:22"
+DA_PORT="-p 3000:3000 -p 3001:3001 -p 4000:4000 -p 4001:4001 -p 8080:8080 -p 9000:9000 -p 49159:22"
 DA_VOLUME="-v $(pwd)/:~/"
 if [ $DOVE_OS ]; then
     case "$DOVE_OS" in
@@ -52,6 +53,7 @@ fi
 case "$1" in
     up)
         os_name=$2
+        set_dove_os $os_name
         if [ ! $# -eq 2 ]; then
             echo "command: dove up [os name (centos|ubuntu)] - Vagrant up container with current directory"
             exit
@@ -61,7 +63,6 @@ case "$1" in
         vagrant up; wait
         vagrant ssh-config $os_name >> ~/.ssh/config
         cd $CURRENT_PATH
-        set_dove_os $os_name
         ;;
     rc)
         app_name=$2
